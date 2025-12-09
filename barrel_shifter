@@ -1,0 +1,32 @@
+module barrel_shifter #(
+    parameter N = 8                // data width
+)(
+    input      [N-1:0]  data_in,   // input data
+    input      [$clog2(N)-1:0] sh, // shift amount
+    input                 dir,     // 0 = left shift, 1 = right shift
+    output reg [N-1:0] data_out    // shifted data
+);
+
+    integer i;
+
+    always @(*) begin
+        data_out = data_in;
+
+        // LEFT SHIFT
+        if (dir == 1'b0) begin
+            for (i = 0; i < $clog2(N); i = i + 1) begin
+                if (sh[i])
+                    data_out = data_out << (1 << i);
+            end
+        end
+        
+        // RIGHT SHIFT
+        else begin
+            for (i = 0; i < $clog2(N); i = i + 1) begin
+                if (sh[i])
+                    data_out = data_out >> (1 << i);
+            end
+        end
+    end
+
+endmodule
